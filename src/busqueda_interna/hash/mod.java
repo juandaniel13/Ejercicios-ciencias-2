@@ -1,4 +1,4 @@
-package hash;
+package busqueda_interna.hash;
 public class mod {
     public static int mod(int key,int arrSize){
     

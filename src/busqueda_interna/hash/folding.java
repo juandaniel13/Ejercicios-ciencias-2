@@ -1,4 +1,4 @@
-package hash;
+package busqueda_interna.hash;
 public class folding {
     public static int folding(String key, int arrLength) {
         int segmentSize = 2; // Tamaño de cada segmento

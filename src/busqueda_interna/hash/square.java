@@ -1,4 +1,4 @@
-package hash;
+package busqueda_interna.hash;
 public class square {
     public static int hashSquare(int key, int arrSize) {
         int squaredKey = key * key;
