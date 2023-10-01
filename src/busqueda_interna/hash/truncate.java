@@ -1,7 +1,7 @@
 package hash;
 public class truncate {
-        public static int truncate(String key, int arrLength) {
-            
+        public static int truncate(Integer key1, int arrLength) {
+            String key = Integer.toString(key1);
             int truncateLength = 3; 
             
             truncateLength = Math.min(truncateLength, key.length());
