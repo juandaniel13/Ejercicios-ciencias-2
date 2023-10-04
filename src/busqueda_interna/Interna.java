@@ -22,6 +22,7 @@ public class Interna {
         this.dataHash = dataHash;
     }
 
+    //gettes
     public Integer[] getData() {
         return data;
     }
@@ -30,6 +31,7 @@ public class Interna {
         return dataHash;
     }
 
+    //metodos secuencial y binario
     public void ingrearClave(int clave, int posicion, Integer[] estructura) {
         estructura[posicion] = clave;
     }
@@ -65,56 +67,43 @@ public class Interna {
             secuencial.busquedaSecuncial(data, clave);
         }
         if (metodo == "binaria") {
-
-        }
-        if (metodo == "hash") {
-
+            Binaria.busquedaBinaria(data, clave);
         }
     }
 
-    public void llenarEstructuraHash( String metodo) {
+
+    //metodos hash
+    public void llenarEstructuraHash(String metodo) {
         int i = 0;
         Scanner input = new Scanner(System.in);
         while (i < dataHash.length) {
-            System.out.println("digite la clave que desea ingresar ");
+            System.out.println("Digite la clave que desea ingresar:");
             int clave = input.nextInt();
-            System.out.println("presiona 0 para dejar de ingresar claves");
-
+    
             if (clave == 0) {
                 break;
             }
             if (!Arrays.asList(dataHash).contains(clave)) {
-                if (metodo == "mod") {
-                    Integer direccion = mod.mod(clave, dataHash.length);
-                    ingrearClave(clave, direccion,dataHash);
-                    System.out.print("la clave se ha ingresado en la posición: " + direccion);
-                    i++;
+                Integer direccion;
+                if ("mod".equals(metodo)) {
+                    direccion = mod.mod(clave, dataHash.length);
+                } else if ("square".equals(metodo)) {
+                    direccion = folding.folding(clave, dataHash.length);
+                } else if ("truncate".equals(metodo)) {
+                    direccion = truncate.truncate(clave, dataHash.length);
+                } else if ("folding".equals(metodo)) {
+                    direccion = folding.folding(clave, dataHash.length);
+                } else {
+                    System.out.println("Método de hash no válido.");
+                    continue; // Salta al siguiente ciclo si el método no es válido
                 }
-                if (metodo == "square") {
-                    Integer direccion = folding.folding(clave, dataHash.length);
-                    ingrearClave(clave, direccion,dataHash);
-                    System.out.print("la clave se ha ingresado en la posición: " + direccion);
-                    i++;
-                }
-                if (metodo == "truncate") {
-                    Integer direccion = truncate.truncate(clave, dataHash.length);
-                    ingrearClave(clave, direccion,dataHash);
-                    System.out.print("la clave se ha ingresado en la posición: " + direccion);
-                    i++;
-                }
-                if (metodo == "folding") {
-                    Integer direccion = folding.folding(clave, dataHash.length);
-                    ingrearClave(clave, direccion,dataHash);
-                    System.out.print("la clave se ha ingresado en la posición: " + direccion);
-                    i++;
-                }
-
-                // System.out.println(Arrays.toString(busquInterna.getData()));
+    
+                ingrearClave(clave, direccion, dataHash);
+                System.out.println("La clave se ha ingresado en la posición: " + direccion);
+                i++;
             } else {
-                System.out.println(
-                        "La clave que intenta ingresar ya se encuentra dentro de la estructura de datos, vuelva a intentar");
+                System.out.println("La clave que intenta ingresar ya se encuentra dentro de la estructura de datos, vuelva a intentar");
             }
-
         }
     }
 

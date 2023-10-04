@@ -17,7 +17,7 @@ public class App {
         Scanner input = new Scanner(System.in);
         while (salir == false) {
 
-            //SECUNCIAL Y BINARIO
+            // SECUNCIAL Y BINARIO
             System.out.println(
                     "selecciona una opción: \n 1. llenar estructura \n 2. Imprimir estructura \n 3. Buscar clave \n" + //
                             " 4. Transformación de claves (hash) ");
@@ -29,11 +29,22 @@ public class App {
                 System.out.println(Arrays.toString(busquInterna.getData()));
             }
             if (opcion == 3) {
-                System.out.println("ingresa la clave que deseas buscar");
-                int clave = input.nextInt();
-                busquInterna.buscarClave(clave, "secuencial");
+                System.out.println(
+                        "ingresa el método por el cual deseas buscar:   \n 1. búsqueda secuencial \n 2. búsqueda binaria ");
+                int opcionBusqueda = input.nextInt();
+                if (opcionBusqueda == 1) {
+                    System.out.println("ingrese la clave que desea buscar: ");
+                    int clave = input.nextInt();
+                    busquInterna.buscarClave(clave, "secuencial");
+                }
+                if (opcionBusqueda == 2) {
+                    System.out.println("ingrese la clave que desea buscar: ");
+                    int clave = input.nextInt();
+                    busquInterna.buscarClave(clave, "binaria");
+                }
+           
             }
-            //TRASNFORMACIÓN DE CLAVES
+            // TRASNFORMACIÓN DE CLAVES
             if (opcion == 4) {
                 System.out.println("selecciona una opción: \n 1. mod \n 2. folding, \n 3. square \n  4. truncate ");
                 int opcionHas = input.nextInt();
