@@ -1,51 +1,127 @@
 package busqueda_externa;
+import java.util.Scanner;
 
-public class Externa {
-    private int[] data; // Estructura para almacenar los registros
-    private int blockSize; // Tamaño del bloque
+import java.util.ArrayList;
+import java.util.List;
 
-    public Externa(int maxSize) {
-        this.data = new int[maxSize];
-        this.blockSize = (int) Math.sqrt(maxSize); // Tamaño del bloque es la raíz cuadrada del número total de registros
+class HashingDinamico {
+
+    private List<List<Integer>> cubetas;
+    private int tamanoInicial;
+    private int tamanoActual;
+    private double densidadOcupacion;
+
+    public HashingDinamico(int tamanoInicial, double densidadOcupacion) {
+        this.tamanoInicial = tamanoInicial;
+        this.tamanoActual = tamanoInicial;
+        this.densidadOcupacion = densidadOcupacion;
+
+        this.cubetas = new ArrayList<>();
+
+        for (int i = 0; i < tamanoInicial; i++) {
+            cubetas.add(new ArrayList<>());
+        }
     }
 
-    // Método para realizar una búsqueda secuencial en bloques de registros
-    public boolean busquedaSecuencial(int clave) {
-        for (int i = 0; i < data.length; i++) {
-            if (data[i] == clave) {
-                return true; // Se encontró la clave en el bloque actual
-            }
-            // Si llegamos al final del bloque o al final de los registros, detenemos la búsqueda
-            if ((i + 1) % blockSize == 0 || i == data.length - 1) {
-                break;
-            }
+    public void insertar(Integer elemento) {
+        if (getFactorCarga() > densidadOcupacion) {
+            expandir();
         }
-        return false; // No se encontró la clave
+
+        int cubeta = getCubeta(elemento);
+
+        cubetas.get(cubeta).add(elemento);
+        tamanoActual++;
+
+        imprimirEstructuraDatos();
     }
 
-    // Método para realizar una búsqueda binaria en bloques de registros
-    public boolean busquedaBinaria(int clave) {
-        for (int i = 0; i < data.length; i += blockSize) {
-            int start = i;
-            int end = Math.min(i + blockSize - 1, data.length - 1);
+    public void eliminar(Integer elemento) {
+        int cubeta = getCubeta(elemento);
 
-            // Realizamos la búsqueda binaria en el bloque actual
-            int result = Arrays.binarySearch(data, start, end + 1, clave);
+        cubetas.get(cubeta).remove(elemento);
+        tamanoActual--;
 
-            if (result >= 0) {
-                return true; // Se encontró la clave en el bloque actual
-            }
+        if (getFactorCarga() < (densidadOcupacion / 2)) {
+            reducir();
         }
-        return false; // No se encontró la clave
+
+        imprimirEstructuraDatos();
     }
 
-    // Método para agregar un registro
-    public void agregarRegistro(int registro) {
-        for (int i = 0; i < data.length; i++) {
-            if (data[i] == 0) {
-                data[i] = registro;
-                break;
+    private void expandir() {
+        int nuevoTamano = tamanoActual * 2;
+        List<List<Integer>> nuevasCubetas = new ArrayList<>();
+
+        for (int i = 0; i < nuevoTamano; i++) {
+            nuevasCubetas.add(new ArrayList<>());
+        }
+
+        for (List<Integer> cubeta : cubetas) {
+            for (Integer elemento : cubeta) {
+                int nuevaCubeta = elemento % nuevoTamano;
+                nuevasCubetas.get(nuevaCubeta).add(elemento);
             }
         }
-    }  
+
+        this.cubetas = nuevasCubetas;
+        this.tamanoActual = nuevoTamano;
+    }
+
+    private void reducir() {
+        int nuevoTamano = tamanoActual / 2;
+        List<List<Integer>> nuevasCubetas = new ArrayList<>();
+
+        for (int i = 0; i < nuevoTamano; i++) {
+            nuevasCubetas.add(new ArrayList<>());
+        }
+
+        for (List<Integer> cubeta : cubetas) {
+            for (Integer elemento : cubeta) {
+                int nuevaCubeta = elemento % nuevoTamano;
+                nuevasCubetas.get(nuevaCubeta).add(elemento);
+            }
+        }
+
+        this.cubetas = nuevasCubetas;
+        this.tamanoActual = nuevoTamano;
+    }
+
+    private int getCubeta(Integer elemento) {
+        return elemento % tamanoActual;
+    }
+
+    private double getFactorCarga() {
+        return (double) tamanoActual / (double) tamanoInicial;
+    }
+
+    private void imprimirEstructuraDatos {
+        System.out.println("---------- Estructura de Datos ----------");
+        for (int i = 0; i < tamanoActual; i++) {
+            System.out.print("Cubeta " + i + ": ");
+            for (Integer elemento : cubetas.get(i)) {
+                System.out.print(elemento + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("-----------------------------------------");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        int tamanoInicial = 5;
+        double densidadOcupacion = 0.75;
+
+        HashingDinamico hashingDinamico = new HashingDinamico(tamanoInicial, densidadOcupacion);
+
+        hashingDinamico.insertar(7);
+        hashingDinamico.insertar(3);
+        hashingDinamico.insertar(10);
+        hashingDinamico.insertar(21);
+        hashingDinamico.insertar(15);
+
+        hashingDinamico.eliminar(3);
+        hashingDinamico.eliminar(15);
+    }
 }
